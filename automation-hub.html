@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broadcast Automation Hub | Vikash Saravanan</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <canvas id="global-particles" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1;"></canvas>
+    <div id="app-frame" class="page-border-light">
+
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-content container">
+                <a href="index.html" class="logo">VIKASH <span>SARAVANAN</span></a>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html#summary">ABOUT</a></li>
+                    <li><a href="index.html#competencies">SKILLS</a></li>
+                    <li><a href="projects.html">DEVELOPED PROJECTS</a></li>
+                    <li><a href="certifications.html">CERTIFICATES</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <section style="padding: 150px 0 50px; min-height: 80vh;">
+            <div class="container">
+                <!-- Auth Gate -->
+                <div id="authGate" class="certs-bordered-card fade-up" style="max-width: 500px; margin: 0 auto; text-align: center; padding: 40px;">
+                    <div class="section-title" style="margin-bottom: 30px;">
+                        <h2>Admin <span class="highlight">Access</span></h2>
+                        <p style="color: var(--text-secondary);">Enter the admin token to access the Broadcast Hub.</p>
+                    </div>
+                    <form id="loginForm" style="display: flex; flex-direction: column; gap: 20px;">
+                        <input type="password" id="adminPassword" placeholder="Admin Token" required
+                            style="padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: #fff; width: 100%;">
+                        <button type="submit" class="btn-primary" id="loginBtn">Authenticate</button>
+                    </form>
+                    <p id="loginError" style="color: #ef4444; margin-top: 15px; display: none;"></p>
+                </div>
+
+                <!-- Main Dashboard (Hidden initially) -->
+                <div id="hubDashboard" style="display: none;" class="fade-up"></div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-bottom">
+                <p>&copy; <span id="copyrightYear"></span> Vikash Saravanan @HearWise Technologies Pvt.Ltd & Professional Portfolio.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="confirmModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center;">
+        <div class="page-border-light" style="background: var(--bg-light); padding: 40px; max-width: 500px; text-align: center;">
+            <h3 style="margin-bottom: 20px;">Confirm Dispatch</h3>
+            <p style="margin-bottom: 30px; color: var(--text-secondary);">You are about to send a broadcast to all registered recipients via the selected channels. This action cannot be undone.</p>
+            <div style="display: flex; gap: 20px; justify-content: center;">
+                <button id="cancelDispatch" class="btn-secondary">Cancel</button>
+                <button id="confirmDispatch" class="btn-primary" style="background: #ef4444; border-color: #ef4444;">Yes, Send Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="particles.js"></script>
+    <script src="automation-hub.js"></script>
+</body>
+</html>

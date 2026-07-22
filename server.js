@@ -31,6 +31,11 @@ const chatLimiter = createRateLimiter({
     max: 20
 });
 
+const loginLimiter = createRateLimiter({
+    windowMs: 15 * 60 * 1000,
+    max: 5
+});
+
 function rateLimitMiddleware(limiter, namespace) {
     return (req, res, next) => {
         const ip = getClientIp(req);
@@ -49,8 +54,18 @@ app.use((req, res, next) => {
     next();
 });
 app.use(helmet({ contentSecurityPolicy: false }));
-app.use(cors());
+const allowedOrigins = Array.from(getAllowedOrigins());
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+}));
 app.use(express.json({ limit: JSON_BODY_LIMIT }));
+app.use(express.static(__dirname)); // Serve static files like HTML, CSS, JS
 
 app.get('/api/chat', (req, res) => {
     res.json({ status: 'Bridge server (Groq) is running', apiKeySet: !!API_KEY });
@@ -92,6 +107,24 @@ app.post('/api/chat', rateLimitMiddleware(chatLimiter, 'chat'), async (req, res)
 app.post('/api/contact', async (req, res) => {
     const result = await processContactSubmission(req.body);
     res.status(result.status).json(result.response);
+});
+
+// Broadcast Hub local handlers
+app.post('/api/broadcast/login', rateLimitMiddleware(loginLimiter, 'broadcast_login'), async (req, res) => {
+    const handler = require('./api/broadcast/login');
+    await handler(req, res);
+});
+app.post('/api/broadcast/dispatch', async (req, res) => {
+    const handler = require('./api/broadcast/dispatch');
+    await handler(req, res);
+});
+app.get('/api/broadcast/telegram/status', async (req, res) => {
+    const handler = require('./api/broadcast/telegram/status');
+    await handler(req, res);
+});
+app.post('/api/broadcast/telegram-webhook', async (req, res) => {
+    const handler = require('./api/broadcast/telegram-webhook');
+    await handler(req, res);
 });
 
 app.listen(PORT, () => {

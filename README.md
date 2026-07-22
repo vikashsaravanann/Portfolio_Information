@@ -48,3 +48,47 @@ Deliver submissions directly to your email inbox:
    npm start
    ```
 3. Open `index.html` in your browser. The frontend will automatically detect localhost and route form submissions and chatbot completions to `http://localhost:3000`.
+
+---
+
+## Broadcast Automation Hub
+
+The **Broadcast Automation Hub** (`automation-hub.html`) allows you to dispatch multi-channel announcements to a pre-defined list of recipients. 
+It supports parallel dispatching to **Email (SMTP)**, **SMS (Fast2SMS)**, **Telegram**, and **WhatsApp (Cloud API)**.
+
+### Accessing the Hub
+The hub requires authentication. Set the `BROADCAST_ADMIN_TOKEN` in your environment variables. 
+When you visit the page, you will be prompted to enter this token.
+
+### Setting up the Channels
+
+#### 1. Telegram
+To allow recipients to receive Telegram broadcasts, they must start a conversation with your bot.
+1. Set `TELEGRAM_BROADCAST_BOT_TOKEN` in your environment.
+2. Set a secure `TELEGRAM_WEBHOOK_SECRET`.
+3. Set your Telegram Bot's webhook to point to your live site:
+   `https://api.telegram.org/bot<YOUR_TOKEN>/setWebhook?url=https://your-domain.com/api/broadcast/telegram-webhook?secret=<YOUR_SECRET>`
+4. When a user sends `/start` to your bot, it will reply with their Chat ID. Add this ID to their profile in your recipient source.
+
+#### 2. WhatsApp (Option A: Meta Cloud API)
+To send WhatsApp messages serverlessly, you must use the official Meta WhatsApp Business Cloud API.
+1. Register as a Meta Developer and create an App with WhatsApp access.
+2. Generate a permanent access token and note your Phone Number ID.
+3. Add `WHATSAPP_CLOUD_API_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID` to your environment.
+*(Note: To send freeform text messages, an active 24-hour service window with the user is required. Otherwise, you must configure pre-approved templates in the code.)*
+
+#### 3. SMS (Fast2SMS)
+Set `FAST2SMS_API_KEY`. It automatically parses 10-digit Indian phone numbers.
+
+### Recipient Data Source
+For security, recipient data is not stored in the repository. Provide a JSON file endpoint in `BROADCAST_RECIPIENTS_SOURCE`. The JSON must be an array of objects like:
+```json
+[
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "phone": "9876543210",
+    "telegram_chat_id": "123456789"
+  }
+]
+```
