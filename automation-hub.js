@@ -91,6 +91,22 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     `;
 
+    // Resolve API URL (handles GitHub Pages, Localhost without Vercel, and Vercel)
+    function getApiUrl(endpoint) {
+        const PRODUCTION_API_URL = 'https://startupwithvikash.vercel.app';
+        let url = endpoint; // Default relative for Vercel
+        if (window.location.protocol === 'file:' || 
+            (window.location.hostname === 'localhost' && window.location.port !== '3000')) {
+            // Local testing without Vercel Dev (assuming Vercel dev runs on 3000)
+            url = 'http://localhost:3000' + endpoint;
+        } else if (window.location.hostname.includes('github.io') || 
+                   (window.location.hostname && !window.location.hostname.includes('vercel.app') && window.location.hostname !== 'localhost')) {
+            // Deployed to GitHub Pages or custom domain without serverless
+            url = PRODUCTION_API_URL + endpoint;
+        }
+        return url;
+    }
+
     // Login Flow
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -103,7 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loginError.style.display = 'none';
 
         try {
-            const res = await fetch('/api/broadcast/login', {
+            const apiUrl = getApiUrl('/api/broadcast/login');
+            const res = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -124,7 +141,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginError.style.display = 'block';
             }
         } catch (err) {
-            loginError.textContent = 'Network error. Please try again.';
+            console.error('Login Fetch Error:', err);
+            
+            let errMsg = err.message || 'Unknown network error';
+            // Give a hint if they are using file:// or GitHub Pages
+            if (window.location.protocol === 'file:') {
+                errMsg = 'Cannot use APIs from file:// protocol. Please use Vercel Dev.';
+            } else if (window.location.hostname.includes('github.io')) {
+                errMsg = 'APIs will not work on GitHub Pages unless absolute URL is used. Error: ' + errMsg;
+            }
+            
+            loginError.textContent = 'Error: ' + errMsg;
             loginError.style.display = 'block';
         } finally {
             btn.disabled = false;
@@ -190,7 +217,8 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsContent.textContent = 'Dispatching to ' + channels.join(', ') + '...\nPlease wait, this may take a moment depending on the recipient count.\n';
 
             try {
-                const res = await fetch('/api/broadcast/dispatch', {
+                const apiUrl = getApiUrl('/api/broadcast/dispatch');
+                const res = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
@@ -223,7 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function checkTelegramStatus() {
         const tgStatusText = document.getElementById('tg-status-text');
         try {
-            const res = await fetch('/api/broadcast/telegram/status', {
+            const apiUrl = getApiUrl('/api/broadcast/telegram/status');
+            const res = await fetch(apiUrl, {
                 headers: { 'Authorization': `Bearer ${sessionToken}` }
             });
             const data = await res.json();
