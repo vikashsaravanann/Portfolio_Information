@@ -93,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Resolve API URL (handles GitHub Pages, Localhost without Vercel, and Vercel)
     function getApiUrl(endpoint) {
+        // Pointing to the production Vercel deployment URL
         const PRODUCTION_API_URL = 'https://startupwithvikash.vercel.app';
         let url = endpoint; // Default relative for Vercel
         if (window.location.protocol === 'file:' || 
