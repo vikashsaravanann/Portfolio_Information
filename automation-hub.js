@@ -1,9 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const authGate = document.getElementById('authGate');
+    const authOverlay = document.getElementById('authOverlay');
+    const authParticles = document.getElementById('authParticles');
     const hubDashboard = document.getElementById('hubDashboard');
     const loginForm = document.getElementById('loginForm');
     const loginError = document.getElementById('loginError');
     
+    // Generate ~30 scattered particles
+    if (authParticles) {
+        for (let i = 0; i < 30; i++) {
+            const p = document.createElement('div');
+            p.className = 'auth-particle';
+            const size = Math.random() * 1.5 + 1.5; // 1.5 to 3px
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.animationDelay = (Math.random() * 4) + 's';
+            authParticles.appendChild(p);
+        }
+    }
+
     let sessionToken = null;
 
     const dashboardHTML = `
@@ -78,24 +94,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // Login Flow
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        const username = document.getElementById('adminUsername').value;
         const password = document.getElementById('adminPassword').value;
         const btn = document.getElementById('loginBtn');
         
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+        btn.innerHTML = '<div class="spinner-ring"></div>';
         loginError.style.display = 'none';
 
         try {
             const res = await fetch('/api/broadcast/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password })
+                body: JSON.stringify({ username, password })
             });
             const data = await res.json();
 
             if (res.ok && data.success) {
                 sessionToken = data.token;
-                authGate.style.display = 'none';
+                authOverlay.style.display = 'none';
                 
                 // Inject DOM dynamically after authentication
                 hubDashboard.innerHTML = dashboardHTML;
@@ -103,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 initDashboard();
             } else {
-                loginError.textContent = data.error || 'Authentication failed.';
+                loginError.textContent = data.error || 'Invalid credentials.';
                 loginError.style.display = 'block';
             }
         } catch (err) {
@@ -111,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loginError.style.display = 'block';
         } finally {
             btn.disabled = false;
-            btn.textContent = 'Authenticate';
+            btn.textContent = 'Sign In';
         }
     });
 

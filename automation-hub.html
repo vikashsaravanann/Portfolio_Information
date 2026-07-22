@@ -30,22 +30,207 @@
             </div>
         </nav>
 
+        <style>
+            /* HearWise Login Theme (Scoped to overlay) */
+            .auth-overlay {
+                position: fixed;
+                top: 0; left: 0; width: 100vw; height: 100vh;
+                background: radial-gradient(circle at 50% 0%, #151532 0%, #070710 100%);
+                z-index: 9999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                overflow: hidden;
+            }
+            .auth-particles {
+                position: absolute;
+                top: 0; left: 0; width: 100%; height: 100%;
+                pointer-events: none;
+                z-index: 0;
+            }
+            .auth-particle {
+                position: absolute;
+                background: #6366f1;
+                border-radius: 50%;
+                box-shadow: 0 0 8px 2px rgba(99,102,241,0.6);
+                animation: pulseParticle 4s infinite ease-in-out;
+            }
+            @keyframes pulseParticle {
+                0% { opacity: 0.1; }
+                50% { opacity: 0.6; }
+                100% { opacity: 0.1; }
+            }
+            .auth-card {
+                position: relative;
+                z-index: 1;
+                width: 100%;
+                max-width: 700px;
+                background: #0f111a;
+                border-radius: 16px;
+                border-top: 3px solid #6366f1;
+                box-shadow: 0 10px 40px -10px rgba(99,102,241,0.15);
+                padding: 64px 40px;
+                margin: 20px;
+                animation: cardEntrance 0.6s ease-out forwards;
+                opacity: 0;
+                transform: translateY(20px);
+                font-family: 'Inter', sans-serif;
+            }
+            @keyframes cardEntrance {
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .auth-waveform {
+                display: flex;
+                gap: 4px;
+                justify-content: center;
+                margin-bottom: 24px;
+                height: 24px;
+                align-items: center;
+            }
+            .auth-bar {
+                width: 6px;
+                background: #6366f1;
+                border-radius: 3px;
+                animation: waveBar 1.2s infinite ease-in-out;
+            }
+            @keyframes waveBar {
+                0%, 100% { height: 8px; }
+                50% { height: 24px; }
+            }
+            .auth-title {
+                color: #ffffff;
+                font-size: 2.5rem;
+                font-weight: 700;
+                text-align: center;
+                margin-bottom: 8px;
+            }
+            .auth-subtitle {
+                color: #8e95a5;
+                text-align: center;
+                font-size: 1.1rem;
+                margin-bottom: 40px;
+            }
+            .auth-input-group {
+                margin-bottom: 20px;
+            }
+            .auth-input {
+                width: 100%;
+                background: #161825;
+                border: 1px solid #1e2336;
+                border-radius: 12px;
+                color: #ffffff;
+                padding: 16px;
+                font-size: 1rem;
+                outline: none;
+                transition: border-color 0.2s;
+            }
+            .auth-input:focus {
+                border-color: #6366f1;
+            }
+            .auth-input::placeholder {
+                color: #5a6273;
+            }
+            .auth-btn {
+                width: 100%;
+                background: #ffffff;
+                color: #0f111a;
+                border: none;
+                border-radius: 12px;
+                padding: 16px;
+                font-size: 1.1rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: opacity 0.2s;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .auth-btn:hover {
+                opacity: 0.9;
+            }
+            .auth-btn:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+            }
+            .auth-error-banner {
+                background: rgba(239,68,68,0.1);
+                border: 1px solid #ef4444;
+                color: #ef4444;
+                padding: 12px;
+                border-radius: 8px;
+                text-align: center;
+                margin-bottom: 24px;
+                font-size: 0.95rem;
+                display: none;
+            }
+            .auth-footer {
+                margin-top: 32px;
+                text-align: center;
+                color: #8e95a5;
+                font-size: 0.75rem;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+            /* Loader spinner for button */
+            .spinner-ring {
+                width: 20px;
+                height: 20px;
+                border: 3px solid rgba(15,17,26,0.3);
+                border-top-color: #0f111a;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin { 100% { transform: rotate(360deg); } }
+            
+            @media (max-width: 600px) {
+                .auth-card { padding: 40px 24px; }
+                .auth-title { font-size: 2rem; }
+            }
+        </style>
+
+        <div id="authOverlay" class="auth-overlay">
+            <div class="auth-particles" id="authParticles"></div>
+            <div class="auth-card">
+                <div class="auth-waveform">
+                    <div class="auth-bar" style="animation-delay: 0.0s;"></div>
+                    <div class="auth-bar" style="animation-delay: 0.1s;"></div>
+                    <div class="auth-bar" style="animation-delay: 0.2s;"></div>
+                    <div class="auth-bar" style="animation-delay: 0.3s;"></div>
+                    <div class="auth-bar" style="animation-delay: 0.4s;"></div>
+                    <div class="auth-bar" style="animation-delay: 0.5s;"></div>
+                    <div class="auth-bar" style="animation-delay: 0.4s;"></div>
+                    <div class="auth-bar" style="animation-delay: 0.3s;"></div>
+                    <div class="auth-bar" style="animation-delay: 0.2s;"></div>
+                    <div class="auth-bar" style="animation-delay: 0.1s;"></div>
+                    <div class="auth-bar" style="animation-delay: 0.0s;"></div>
+                </div>
+                <h1 class="auth-title">Access Automation Hub</h1>
+                <p class="auth-subtitle">Secure entry for the site administrator.</p>
+
+                <div class="auth-error-banner" id="loginError">Invalid credentials.</div>
+
+                <form id="loginForm">
+                    <div class="auth-input-group">
+                        <input type="text" id="adminUsername" class="auth-input" placeholder="Username" required>
+                    </div>
+                    <div class="auth-input-group">
+                        <input type="password" id="adminPassword" class="auth-input" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="auth-btn" id="loginBtn">Sign In</button>
+                </form>
+
+                <div class="auth-footer">
+                    <i class="fas fa-shield-alt"></i> Enterprise-Grade Encryption
+                </div>
+            </div>
+        </div>
+
         <section style="padding: 150px 0 50px; min-height: 80vh;">
             <div class="container">
-                <!-- Auth Gate -->
-                <div id="authGate" class="certs-bordered-card fade-up" style="max-width: 500px; margin: 0 auto; text-align: center; padding: 40px;">
-                    <div class="section-title" style="margin-bottom: 30px;">
-                        <h2>Admin <span class="highlight">Access</span></h2>
-                        <p style="color: var(--text-secondary);">Enter the admin token to access the Broadcast Hub.</p>
-                    </div>
-                    <form id="loginForm" style="display: flex; flex-direction: column; gap: 20px;">
-                        <input type="password" id="adminPassword" placeholder="Admin Token" required
-                            style="padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: #fff; width: 100%;">
-                        <button type="submit" class="btn-primary" id="loginBtn">Authenticate</button>
-                    </form>
-                    <p id="loginError" style="color: #ef4444; margin-top: 15px; display: none;"></p>
-                </div>
-
                 <!-- Main Dashboard (Hidden initially) -->
                 <div id="hubDashboard" style="display: none;" class="fade-up"></div>
             </div>
