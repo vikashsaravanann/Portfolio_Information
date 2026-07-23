@@ -16,7 +16,7 @@
      ═══════════════════════════════════════════ */
   const GROQ_MODEL = 'llama-3.3-70b-versatile';
   const API_URL = '/api/chat';
-  const PRODUCTION_API_URL = 'https://portfolio-information.vercel.app';
+  const PRODUCTION_API_URL = 'https://startupwithvikash.vercel.app';
   const LOCAL_API_URL = 'http://localhost:3000/api/chat';
 
   const SYSTEM_PROMPT = `You are Vikash's intelligent AI portfolio assistant. Your primary goal is to provide accurate, helpful, and professional information about Vikash Saravanan.

@@ -9,7 +9,7 @@ const AI_API_URL = (() => {
     if (loc.hostname === 'localhost' || loc.hostname === '127.0.0.1') {
         return 'http://localhost:3000/api/chat';
     }
-    return 'https://portfolio-information.vercel.app/api/chat';
+    return 'https://startupwithvikash.vercel.app/api/chat';
 })();
 const CALENDLY_URL = "https://calendly.com/vikash07052008";
 // ============================================

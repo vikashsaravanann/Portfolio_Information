@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const messageBody = `Hi Vikash,\n\nNew inquiry from your portfolio website.\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone || 'Not provided'}\nSubject: ${subject}\n\nMessage:\n${message}`;
 
             try {
-                const PRODUCTION_API_URL = 'https://portfolio-information.vercel.app';
+                const PRODUCTION_API_URL = 'https://startupwithvikash.vercel.app';
                 let url = '/api/contact';
                 if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
                     url = 'http://localhost:3000/api/contact';
